@@ -49,7 +49,7 @@ module top(
         .clk_in1( clk ), .reset( glbl_rst ),
         .locked( locked ), .safe_reset( safe_reset ), .safe_clk( safe_clk ) );
 
-    // example counter using 8 Mhz MMCM clock (clk_out) and synchronous reset (safe_reset):
+    // example counter using 1 Mhz MMCM clock (clk_out) and synchronous reset (safe_reset):
     ex_count ex_count_inst1 (
         .safe_reset( safe_reset ), .safe_clk( safe_clk ),
         .ex_count_out( ex_count_out) );

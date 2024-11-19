@@ -75,12 +75,13 @@ module clk_wiz_0_exdes
   reg rst_sync_int1;
   reg rst_sync_int2;
 
-  assign safe_reset = rst_sync_int2;
-  assign safe_clk = clk;
-
   // Declare the clocks
   wire           clk_int;
   wire           clk;
+  wire clk_out1_unused, clk_out2_unused, clk_out3_unused, clk_out4_unused, clk_out6_unused, clk_out7_unused;
+
+  assign safe_reset = rst_sync_int2;
+  assign safe_clk = clk;
 
   // Instantiation of the clocking network
   //--------------------------------------
@@ -88,8 +89,10 @@ module clk_wiz_0_exdes
    (
    // Clock in ports input 200 Mhz
     .clk_in1            (clk_in1),
+   .clk_out1(clk_out1_unused), .clk_out2(clk_out2_unused), .clk_out3(clk_out3_unused), .clk_out4(clk_out4_unused),
     // Clock out ports cascaded 1 Mhz output (clk_out7 16 Mhz -> div 16 -> clk_out5 1 MHz
     .clk_out5           (clk_int),
+    .clk_out6 (clk_out6_unused), .clk_out7(clk_out7_unused),
     // Status and control signals
     .reset              (reset),
     .locked             (locked));

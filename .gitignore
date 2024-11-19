@@ -10,6 +10,7 @@
 # IP is generated here...
 doc/
 *.veo
+*.vh
 clk_wiz_0.v
 clk_wiz_0.xdc
 clk_wiz_0.xml

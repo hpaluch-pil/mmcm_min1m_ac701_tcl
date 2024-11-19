@@ -7,11 +7,10 @@ Function:
 * Input clock 200 Mhz
 * MMCM generates 1 MHz clock using CLKOUT4 Cascade mode
 
-> WARNING! There is reported timing violation - but it seems to be incorrect (minimum frequency
-> required for non-cascade mode:
-> 
-> ![Timing Summary Violation](assets/timing-summary.gif)
-
+> WARNING! Vivado 2015.1 produces incorrect error, 
+> see https://adaptivesupport.amd.com/s/question/0D54U00008qlAmRSAU/mmcm-clkout4cascade-works-for-1-mhz-output-but-with-tpws-violation?language=en_US
+> So this project uses Viado 2023.2 (not 2024.1 because it produces enother error - HSR...
+>
 > WARNING! Test Bench TB `clk_wiz_0_tb.v` is broken! (It depends on internal
 > counter stuff in `clk_wiz_0_exdes.v`, that I removed to minimize design for
 > schematic).
@@ -21,23 +20,23 @@ found in [clk_wiz_0_exdes.v](clk_wiz_0_exdes.v).
 
 Here is schematic image (from Synthesis) of minimized version:
 
-![Clock Reset Synchronizer](assets/clk-wiz-inst1.gif)
+![Clock Reset Synchronizer](assets/ac701-1mhz-schema.gif)
 
 Requirements:
 * [Artix-7 FPGA Evaluation Kit](Artix-7 FPGA Evaluation Kit)
-* Vivado 2015.1 (last version supported by official AC701 examples)
+* Vivado 2023.2 (last version supported by official AC701 examples)
 
 # Setup
 
-* Run `Vivado 2015.1 Tcl Shell`
+* Run `Vivado 2023.2 Tcl Shell`
 * `cd` to this project directory
-* create new project `../mmcm_min1m_ac701_work/` by typing:
+* create new project `../mmcm_min1m_ac701_v2023-2/` by typing:
   ```tcl
-  source aa-gen-project.tcl
+  source aa-create-project-2023.2.tcl
   ```
 * `exit` this TCL shell
-* run `Vivado 2015.1` GUI
-* open project in parent directory: `../mmcm_min1m_ac701_work/`
+* run `Vivado 2023.2` GUI
+* open project in parent directory: `../mmcm_min1m_ac701_v2023-2/`
 * click on Program and Debug -> `Generate Bistream` (it will invoke all required steps)
 
 # Demo input/output
@@ -68,9 +67,9 @@ see Example counter stuff in [ex_count.v](ex_count.v) for demo.
 
 You can see live results (on Digilent Analog Discovery 2 scope/analyzer) when CPU RESET button was release (`glbl_reset`):
 
-![MMCM Reset Analyzer](assets/mmcm-min1m-analyzer.gif)
+![MMCM Reset Analyzer](assets/ac701-1mhz-ad2.gif)
 
-Digilent WaveForms workspace file: [assets/ac701_mmcm_min1m.dwf3work](assets/ac701_mmcm_min1m.dwf3work)
+Digilent WaveForms workspace file: [assets/ac701_mmcm_min1m-pmod.dwf3work](assets/ac701_mmcm_min1m-pmod.dwf3work)
 
 
 [Artix-7 FPGA Evaluation Kit]: https://www.xilinx.com/products/boards-and-kits/ek-a7-ac701-g.html
