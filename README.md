@@ -30,7 +30,7 @@ Here is schematic image (from Synthesis) of minimized version:
 ![Clock Reset Synchronizer](assets/clk-wiz-inst1.gif)
 
 Requirements:
-* [Artix-7 FPGA Evaluation Kit](Artix-7 FPGA Evaluation Kit)
+* [Artix-7 FPGA Evaluation Kit][Artix-7 FPGA Evaluation Kit] - known as AC701
 * Vivado 2015.1 (last version supported by official AC701 examples)
 
 # Setup
