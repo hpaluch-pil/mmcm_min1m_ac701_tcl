@@ -14,14 +14,12 @@ Function:
 * Input clock 200 Mhz
 * MMCM generates 1 MHz clock using CLKOUT4 Cascade mode
 
-> WARNING! There is reported timing violation - but it seems to be incorrect (minimum frequency
+> WARNING! On Vivado 2015.1 - there is reported timing violation - but it seems to be incorrect (minimum frequency
 > required for non-cascade mode:
 > 
 > ![Timing Summary Violation](assets/timing-summary.gif)
-
-> WARNING! Test Bench TB `clk_wiz_0_tb.v` is broken! (It depends on internal
-> counter stuff in `clk_wiz_0_exdes.v`, that I removed to minimize design for
-> schematic).
+>
+> It was fixed in some higher Vivado versions (tested 2023.2).
 
 Main reset code was generated using `Open IP Example Design...` and can be
 found in [clk_wiz_0_exdes.v](clk_wiz_0_exdes.v).
