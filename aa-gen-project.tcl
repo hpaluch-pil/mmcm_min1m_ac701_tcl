@@ -103,6 +103,7 @@ set files [list \
  "[file normalize "$origin_dir/clk_wiz_0_tb.v"]"\
 ]
 add_files -norecurse -fileset $obj $files
+set_property -name {xsim.simulate.runtime} -value {8250ns} -objects [get_filesets sim_1]
 
 # Set 'sim_1' fileset file properties for remote files
 set file "$origin_dir/clk_wiz_0_tb.v"
