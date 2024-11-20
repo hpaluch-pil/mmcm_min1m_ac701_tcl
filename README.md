@@ -11,9 +11,6 @@ Function:
 > see https://adaptivesupport.amd.com/s/question/0D54U00008qlAmRSAU/mmcm-clkout4cascade-works-for-1-mhz-output-but-with-tpws-violation?language=en_US
 > So this project uses Viado 2023.2 (not 2024.1 because it produces enother error - HSR...
 >
-> WARNING! Test Bench TB `clk_wiz_0_tb.v` is broken! (It depends on internal
-> counter stuff in `clk_wiz_0_exdes.v`, that I removed to minimize design for
-> schematic).
 
 Main reset code was generated using `Open IP Example Design...` and can be
 found in [clk_wiz_0_exdes.v](clk_wiz_0_exdes.v).
@@ -38,6 +35,30 @@ Requirements:
 * run `Vivado 2023.2` GUI
 * open project in parent directory: `../mmcm_min1m_ac701_v2023-2/`
 * click on Program and Debug -> `Generate Bistream` (it will invoke all required steps)
+
+
+# Run simulation
+
+Here is adapted (manually) Test Bench (TB) file [clk_wiz_0_tb.v](clk_wiz_0_tb.v) which verifies that output clock from MMCM matches expected clock (1 MHz).
+
+To run Simulation:
+- run Flow Navigator -> Simulation -> Run Simulation
+- watch Tcl console for:
+
+```
+Timing checks are not valid
+Timing checks are valid
+Freq of safe_clk ( in MHz ) : 1.000000
+
+SIMULATION PASSED
+Test Completed Successfully
+SYSTEM_CLOCK_COUNTER : 1640
+
+$finish called at time : 8200100 ps : File "E:/projects/ac701/mmcm_min1m_ac701_v2023_tcl/clk_wiz_0_tb.v" Line 133
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'clk_wiz_0_tb_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for 8250ns
+```
+
 
 # Demo input/output
 

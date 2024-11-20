@@ -1,4 +1,4 @@
-// file: clk_wiz_0_tb.v - BROKEN (depends on internal counter that was removed in this project)
+// file: clk_wiz_0_tb.v - Test Bench for Clock Wizard, verifies that output clock is 1 MHz
 // 
 // (c) Copyright 2008 - 2013 Xilinx, Inc. All rights reserved.
 // 
@@ -67,7 +67,8 @@ module clk_wiz_0_tb ();
   // how many cycles to run
   localparam  COUNT_PHASE = 1024;
   // we'll be using the period in many locations
-  localparam time PER1    = 10.0*ONE_NS;
+  localparam CLKIN_PER_NS = 5.0; // 5 ns = 200 MHz input clock
+  localparam time PER1    = CLKIN_PER_NS*ONE_NS;
   localparam time PER1_1  = PER1/2;
   localparam time PER1_2  = PER1 - PER1/2;
 
@@ -79,15 +80,21 @@ module clk_wiz_0_tb ();
   // Status and control signals
   reg         reset      = 0;
   wire        locked;
-  reg         COUNTER_RESET = 0;
   reg [13:0]  timeout_counter = 14'b00000000000000;
-  wire [1:1]   CLK_OUT;
+  wire safe_clk;
 
 
-
-//Freq Check using the M & D values setting and actual Frequency generated
+//Freq Check using the  M & D values setting and actual Frequency generated
   real period1;
-  localparam ref_period1_clkin1 = (10.0*1*125.000*1000/10.000);
+// see c:\Xilinx\Vivado\2015.1\data\ip\xilinx\clk_wiz_v5_1\ttcl\variables.ttcl
+//  or c:\Xilinx\Vivado\2023.2\data\ip\xilinx\clk_wiz_v6_0\ttcl\ 
+// and tb_v.ttcl how these values are used:
+  localparam TB_MMCM_CLKFBOUT_MULT_F = 24.0; // copy value of MMCM_CLKFBOUT_MULT_F from ..\mmcm_min1m_ac701_v2023-2\mmcm_min1m_ac701_v2023-2.srcs\sources_1\ip\clk_wiz_0\clk_wiz_0.xci
+  localparam TB_MMCM_DIVCLK_DIVIDE = 5.0; 
+  localparam TB_MMCM_CLKOUT6_DIVIDE_F = 60.0;
+  // must include cascaded division of CLKOUT4 from CLKOUT6
+  localparam TB_MMCM_CLKOUT4_DIVIDE = 16.0;
+  localparam ref_period1_clkin1 = (CLKIN_PER_NS*TB_MMCM_DIVCLK_DIVIDE*TB_MMCM_CLKOUT6_DIVIDE_F*1000*TB_MMCM_CLKOUT4_DIVIDE/TB_MMCM_CLKFBOUT_MULT_F);
   time prev_rise1;
 
   // Input clock generation
@@ -103,27 +110,21 @@ module clk_wiz_0_tb ();
     // Set up any display statements using time to be readable
     $timeformat(-12, 2, "ps", 10);
     $display ("Timing checks are not valid");
-    COUNTER_RESET = 0;
     test_phase = "reset";
     reset = 1;
     #(PER1*200);
     reset = 0;
     test_phase = "wait lock";
     `wait_lock;
-    #(PER1*20);
-    COUNTER_RESET = 1;
-    #(PER1*19.2)
-    COUNTER_RESET = 0;
-    #(PER1*0.3)
-    #(PER1*1)
+    #(PER1*41);
     $display ("Timing checks are valid");
     test_phase = "counting";
     #(PER1*COUNT_PHASE);
     if ((period1 -ref_period1_clkin1) <= 100 && (period1 -ref_period1_clkin1) >= -100) begin
-    $display("Freq of CLK_OUT[1] ( in MHz ) : %0f\n", 1000000/period1);
+    $display("Freq of safe_clk ( in MHz ) : %0f\n", 1000000/period1);
     end else 
     begin
-    $display("ERROR: Freq of CLK_OUT[1] is not correct"); 
+    $display("ERROR: Freq of safe_clk (in MHz) : %0f is not correct, expected: %0f", 1000000/period1, 1000000/ref_period1_clkin1);
     $finish;
     end 
     $display("SIMULATION PASSED");
@@ -151,11 +152,8 @@ module clk_wiz_0_tb ();
     dut
    (// Clock in ports
     .clk_in1            (clk_in1),
-    // Reset for logic in example design
-    .COUNTER_RESET      (COUNTER_RESET),
-    .CLK_OUT            (CLK_OUT),
-    // High bits of the counters
-    .COUNT              (COUNT),
+    // Clock out
+    .safe_clk            (safe_clk),
     // Status and control signals
     .reset              (reset),
     .locked             (locked));
@@ -165,7 +163,7 @@ module clk_wiz_0_tb ();
 initial
   prev_rise1 = 0;
 
-always @(posedge CLK_OUT[1])
+always @(posedge safe_clk)
 begin
   if (prev_rise1 != 0)
     period1 = $time - prev_rise1;
