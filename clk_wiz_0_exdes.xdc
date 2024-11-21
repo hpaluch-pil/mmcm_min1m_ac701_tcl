@@ -58,6 +58,10 @@ set_property -dict { PACKAGE_PIN R3 IOSTANDARD DIFF_SSTL15 } [get_ports sys_clk_
 set_property -dict { PACKAGE_PIN P3 IOSTANDARD DIFF_SSTL15 } [get_ports sys_clk_n]
 create_clock -name clk_p -period 5.0 [get_nets sys_clk_p]
 
+# workaround to avoid TPSW violation
+# from: https://adaptivesupport.amd.com/s/question/0D54U00008qlAmRSAU/mmcm-clkout4cascade-works-for-1-mhz-output-but-with-tpws-violation?language=en_US
+set_property CLKOUT4_CASCADE TRUE [get_cells clk_wiz_inst1/clknetwork/inst/mmcm_adv_inst]
+
 ## SW8 "CPU Reset" button, Active High, Idle Low
 ## from ac701_ethernet\ac701_ethernet_rgmii_example\ac701_ethernet_rgmii_example.srcs\constrs_1\imports\example_design\ac701_ethernet_rgmii_example_design.xdc 
 set_property PACKAGE_PIN U4           [get_ports glbl_rst]
